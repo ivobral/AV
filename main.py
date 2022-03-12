@@ -40,18 +40,32 @@ def Input_function(target_input, value):
 Input_function(auto_cashout_input, "1.20")
 Input_function(bet_input, "0.29")
 
+
 bet_button = driver.find_element(By.XPATH, "/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[3]/app-bet-controls/div/app-bet-control[1]/div/div[1]/div[2]/button")
-bet_button.click()
+
 
 avio_space = driver.find_element(By.CLASS_NAME, "dom-container")
 
-while True:
-    time.sleep(2)
-    div_checker = avio_space.find_elements(By.TAG_NAME, "div")
+def bet_button_function(border_class):
+    if border_class == "controls":
+        print("Mos se kladit na sljedeću ruku!!!")
+    elif border_class == "controls border-orange":
+        print("Kladiš se trenutačno!!!")
+    elif border_class == "controls border-red":
+        print("Ulozio si za sljedeću ruku!!!")
 
-    if div_checker[2].get_attribute("class") == "after-end-wrapper after-end-wrapper-lg ng-star-inserted":
-        print("Wraper za kraj")
-    elif div_checker[2].get_attribute("class") == "bet-timer-wrapper ng-star-inserted":
+def main_window_status(status):
+    if status.get_attribute("class") == "after-end-wrapper after-end-wrapper-lg ng-star-inserted":
+        print("Runda završila na " + div_checker[2].find_element(By.XPATH, "/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[2]/app-play-board/div/div[2]/app-dom-container/div/div[2]/div[2]").text)
+    elif status.get_attribute("class") == "bet-timer-wrapper ng-star-inserted":
         print("Timer wraper")
-    elif div_checker[2].get_attribute("class") == "payout-coefficient-wrapper ng-star-inserted":
-        print("Koeficijenit")
+    elif status.get_attribute("class") == "payout-coefficient-wrapper ng-star-inserted":
+        print("Runda jos traje " + div_checker[2].find_element(By.XPATH, "/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[2]/app-play-board/div/div[2]/app-dom-container/div/div[2]/app-payout-coefficient/div"). text)
+
+while True:
+    time.sleep(4)
+    div_checker = avio_space.find_elements(By.TAG_NAME, "div")
+    bet_div_class = driver.find_element(By.XPATH, "/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[3]/app-bet-controls/div/app-bet-control[1]/div").get_attribute("class")
+
+    bet_button_function(bet_div_class)
+    main_window_status(div_checker[2])
